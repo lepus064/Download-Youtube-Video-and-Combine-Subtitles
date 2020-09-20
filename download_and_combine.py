@@ -32,12 +32,15 @@ def combine_srt(lang0:str, lang1:str, outname:str):
 	# print(l0)
 	l1, lang1dict = sub2dict(lang1)
 	outfile = open(outname, 'w')
-	for time in lang0dict:
+	times = sorted(set([t for t in lang0dict]+[t for t in lang1dict]))
+	for time in times:
 		outfile.write(time)
-		outfile.write(l0+' ')
-		outfile.write(lang0dict[time])
-		outfile.write(l1+' ')
-		outfile.write(lang1dict[time])
+		if(time in lang0dict):
+			outfile.write(l0+' ')
+			outfile.write(lang0dict[time])
+		if(time in lang1dict):
+			outfile.write(l1+' ')
+			outfile.write(lang1dict[time])
 		outfile.write("\n")
 	outfile.close()
 
@@ -46,7 +49,7 @@ if __name__ == "__main__":
 
 	os.system("mkdir new")
 	os.chdir("new")
-	os.system("youtube-dl --all-subs --sub-format srt "+sys.argv[1])
+	# os.system("youtube-dl --all-subs --sub-format srt "+sys.argv[1])
 
 	lang0 = str(sys.argv[2])
 	lang1 = str(sys.argv[3])
@@ -61,6 +64,9 @@ if __name__ == "__main__":
 	file_name = lang0[:end]+'.srt'
 	combine_srt(lang0, lang1, file_name)
 
+	# os.system("rm "+lang0)
+	# os.system("rm "+lang1)
+
 	os.chdir("..")
 	dir_name = file_name[:-4].replace(" ", '\\ ')
-	os.system('mv new '+dir_name)
+	# os.system('mv new '+dir_name)
